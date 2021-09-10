@@ -23,6 +23,6 @@ public class Movie {
     private String name;
     private String type;
     private Long duration;
-    private Date releaseDate;
+    private Long releaseYear;
 
 }
