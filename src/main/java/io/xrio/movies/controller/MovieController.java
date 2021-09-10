@@ -5,6 +5,7 @@ import io.xrio.movies.exception.MovieNotFoundException;
 import io.xrio.movies.model.Movie;
 import io.xrio.movies.service.MovieService;
 import lombok.Data;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class MovieController {
     public ResponseEntity<?> save(@RequestBody Movie movie) throws MovieDuplicatedException {
         if (movie == null)
             return ResponseEntity.badRequest().body("The provided movie is not valid");
-        return ResponseEntity.ok().body(movieService.save(movie));
+        return ResponseEntity.status(HttpStatus.CREATED).body(movieService.save(movie));
     }
 
     @PutMapping("/")
