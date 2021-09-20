@@ -1,9 +1,7 @@
 package io.xrio.movies.controller;
 
+import io.xrio.movies.converter.MovieConverter;
 import io.xrio.movies.dto.MovieDTO;
-import io.xrio.movies.exception.MovieDuplicatedException;
-import io.xrio.movies.exception.MovieNotFoundException;
-import io.xrio.movies.model.Movie;
 import io.xrio.movies.service.MovieService;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
@@ -11,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author : Elattar Saad
@@ -23,19 +22,24 @@ import javax.validation.Valid;
 public class MovieController {
 
     final MovieService movieService;
+    final MovieConverter movieConverter;
 
     @PostMapping("/")
-    public ResponseEntity<?> save(@Valid @RequestBody Movie movie) throws Exception {
-        if (movie == null)
+    public ResponseEntity<?> save(@Valid @RequestBody MovieDTO movieDTO) throws Exception {
+        if (movieDTO == null)
             return ResponseEntity.badRequest().body("The provided movie is not valid");
-        return ResponseEntity.status(HttpStatus.CREATED).body(movieService.save(movie));
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(movieConverter.convertToDTO(movieService.save(movieConverter.convertToDM(movieDTO))));
     }
 
     @PutMapping("/")
-    public ResponseEntity<?> update(@Valid @RequestBody Movie movie) throws Exception {
-        if (movie == null)
+    public ResponseEntity<?> update(@Valid @RequestBody MovieDTO movieDTO) throws Exception {
+        if (movieDTO == null)
             return ResponseEntity.badRequest().body("The provided movie is not valid");
-        return ResponseEntity.ok().body(movieService.update(movie));
+        return ResponseEntity
+                .ok()
+                .body(movieConverter.convertToDTO(movieService.update(movieConverter.convertToDM(movieDTO))));
     }
 
     @DeleteMapping("/{id}")
@@ -46,8 +50,8 @@ public class MovieController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<?> findAll() {
-        return ResponseEntity.ok().body(movieService.findAll());
+    public ResponseEntity<List<MovieDTO>> findAll() {
+        return ResponseEntity.ok().body(movieConverter.convertToDTOs(movieService.findAll()));
     }
 
 }
