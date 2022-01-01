@@ -1,0 +1,14 @@
+server:
+  port: 8092
+
+spring:
+  datasource:
+    url: jdbc:h2:file:./data/moviesDB
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+
+  jpa:
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: update
